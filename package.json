@@ -1,0 +1,50 @@
+{
+  "name": "koa2",
+  "version": "1.0.0",
+  "description": "node koa2",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon app/app.js --watch"
+  },
+  "keywords": [
+    "koa2",
+    "node"
+  ],
+  "dependencies": {
+    "busboy": "^0.3.1",
+    "ejs": "^2.6.2",
+    "koa": "^2.0.0",
+    "koa-bodyparser": "^3.2.0",
+    "koa-convert": "^1.2.0",
+    "koa-jsonp": "^2.0.2",
+    "koa-router": "^7.0.0",
+    "koa-session-minimal": "^3.0.4",
+    "koa-static": "^3.0.0",
+    "koa-views": "^6.2.0"
+  },
+  "engines": {
+    "node": ">=7.6.0"
+  },
+  "author": "ivin",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "chai": "^4.2.0",
+    "cross-env": "^5.2.0",
+    "externals-dependencies": "^1.0.4",
+    "koa-webpack": "^5.2.4",
+    "koa-webpack-hot-middleware": "^1.0.3",
+    "mocha": "^6.2.0",
+    "nodemon": "^1.19.1",
+    "supertest": "^4.0.2",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-middleware": "^3.7.0",
+    "webpack-dev-server": "^3.8.0"
+  }
+}
