@@ -5,7 +5,8 @@
   "main": "app.js",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon app/app.js --watch"
+    "dev": "cross-env NODE_ENV=development nodemon app/app.js --watch",
+    "start": "node --experimental-modules  --loader app/custom-loader.mjs app/app.js"
   },
   "keywords": [
     "koa2",
