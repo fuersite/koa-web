@@ -1,4 +1,4 @@
-const Router = require('C:/Users/Administrator/AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/koa-router');
+const Router = require('koa-router');
 const HomeAction = require('../controllers/HomeController');
 
 const router = new Router();
