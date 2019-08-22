@@ -1,36 +1,40 @@
 const Koa = require('koa')
 const path = require('path')
+const convert = require('koa-convert')
 const router = require('./routers/index')
 const bodyParser = require('koa-bodyparser')
 const koaLogger = require('koa-logger')
 const kaoStatic = require('koa-static') // 静态文件访问
-const session = require('koa-session-minimal') // session
+const session = require('koa-session') // session
 const views = require('koa-views') // 视图操作
 const sessionStore = require('./utils/sessionStore') // 视图操作
 const mongoose = require('mongoose')
 const app = new Koa()
 
-// 使用session存cookie设置
-let cookie = {
-  domain: 'localhost',  // 写cookie所在的域名
-  path: '/',            // 写cookie所在的路径
-  maxAge: 86400000,     // cookie有效时长
-  httpOnly: true,       // 是否只用于http请求中获取
-  overwrite: true,      // 是否允许重写
-  signed: true,
-}
-
 // 使用session存mongondb
-mongoose.connect('mongodb://admin:123456@localhost:27017/user?authSource=admin')
+mongoose.connect('mongodb://admin:123456@localhost:27017/user?authSource=admin', {'useNewUrlParser': true, 'useCreateIndex':true})
 let store =  new sessionStore({
-  collection: 'sessions',   //数据库集合
+  collection: 'sessions',   // 数据库集合
   connection: mongoose,     // 数据库链接实例
-  expires: 86400,           // 默认时间为1天
-  name: 'session'           // 保存session的表名称
+  // expires: 86400,           // 默认时间为1天
 })
 
+app.keys = ['session_key'];
+
+const sessionConfig = {
+  domain: 'localhost',  // 写cookie所在的域名
+  path: '/',            // 写cookie所在的路径
+  key: 'SESSION_ID',
+  maxAge: 60000,
+  overwrite: true,
+  httpOnly: true,
+  signed: true,
+  rolling: false,
+  store: store
+};
+
 // 开启cookie-session
-app.use(session({key: 'SESSION_ID', cookie, store}))
+app.use(session(sessionConfig,app));
 
 // 配置控制台日志中间件
 app.use(convert(koaLogger()))

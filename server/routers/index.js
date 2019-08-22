@@ -1,21 +1,30 @@
 const Router = require('koa-router');
-const HomeAction = require('../controllers/HomeController');
 
 const router = new Router();
 const user = new Router();
 
-user.get('404', async ( ctx )=>{
-  ctx.body = '404!'
-}).get('helloworld', async ( ctx )=>{
-  ctx.body = 'helloworld!'
-})
-
 router.get('/', ( ctx, next ) => {
-  console.log('root=============')
-  let html = `/root`
-  ctx.body = html
+  const session = ctx.session;
+  console.log('session----------------',session)
+  if (session.user) {
+    ctx.body = session.user
+    return
+  }
+  ctx.body = '/'
 })
 
-router.use('/', user.routes(), user.allowedMethods())
+router.get('/session', ( ctx, next ) => {
+  ctx.body = 'session'
+  const session = ctx.session;
+  if (session.user) {
+    ctx.body = session.user
+  } else {
+    session.user = {
+      name:'ivin',
+      age : 28
+    }
+    ctx.body = session.user
+  }
+})
 
 module.exports = router

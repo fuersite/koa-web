@@ -3,18 +3,16 @@ const schema = {
     data: Object,
     updatedAt: {
         default: new Date(),
-        expires: 86400,
         type: Date
     }
 };
-export default class MongooseStore {
-    constructor ({collection = 'sessions', connection = null, expires = 86400, name = 'Session'} = {}) {
+class MongooseStore {
+    constructor ({collection = 'sessions', connection = null} = {}) {
         if (!connection) {
             throw new Error('params connection is not collection');
         }
-        const updatedAt = { ...schema.updatedAt, expires };  // 可自定义过期时间
-        const { Mongo, Schema } = connection;
-        this.session = Mongo.model(name, new Schema({ ...schema, updatedAt }));
+        const { Schema } = connection;
+        this.session = connection.model(collection, new Schema(schema));
     }
 
     async destroy (id) {
@@ -41,3 +39,5 @@ export default class MongooseStore {
         return new MongooseStore(opts);
     }
 }
+
+module.exports = MongooseStore

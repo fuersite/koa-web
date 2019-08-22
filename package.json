@@ -20,9 +20,11 @@
     "koa-jsonp": "^2.0.2",
     "koa-logger": "^3.2.1",
     "koa-router": "^7.0.0",
+    "koa-session": "^5.12.2",
     "koa-session-minimal": "^3.0.4",
     "koa-static": "^3.0.0",
-    "koa-views": "^6.2.0"
+    "koa-views": "^6.2.0",
+    "mongoose": "^5.6.10"
   },
   "engines": {
     "node": ">=7.6.0"
