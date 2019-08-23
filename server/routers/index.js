@@ -1,30 +1,17 @@
 const Router = require('koa-router');
-
 const router = new Router();
-const user = new Router();
+const home = require('./home')
+const api = require('./api')
+const admin = require('./admin')
+const work = require('./work')
+const error = require('./error')
 
-router.get('/', ( ctx, next ) => {
-  const session = ctx.session;
-  console.log('session----------------',session)
-  if (session.user) {
-    ctx.body = session.user
-    return
-  }
-  ctx.body = '/'
-})
+router.use('/', home.routes(), home.allowedMethods())
+router.use('/api', api.routes(), api.allowedMethods())
+router.use('/admin', admin.routes(), admin.allowedMethods())
+router.use('/work', work.routes(), work.allowedMethods())
+router.use('/error', error.routes(), error.allowedMethods())
 
-router.get('/session', ( ctx, next ) => {
-  ctx.body = 'session'
-  const session = ctx.session;
-  if (session.user) {
-    ctx.body = session.user
-  } else {
-    session.user = {
-      name:'ivin',
-      age : 28
-    }
-    ctx.body = session.user
-  }
-})
+module.exports = router
 
 module.exports = router
