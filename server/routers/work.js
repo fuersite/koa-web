@@ -3,10 +3,10 @@
  */
 
 const router = require('koa-router')()
-const controller = require('./../controllers/work')
+const workController = require('./../controllers/work')
 
 const routers = router
-  .get('/', controller.indexPage)
+  .get('/', workController.indexPage)
 
 
 module.exports = routers
