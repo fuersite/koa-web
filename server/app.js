@@ -12,29 +12,29 @@ const mongoose = require('mongoose')
 const app = new Koa()
 
 // 使用session存mongondb
-// mongoose.connect('mongodb://admin:123456@localhost:27017/user?authSource=admin', {'useNewUrlParser': true, 'useCreateIndex':true})
-// let store =  new sessionStore({
-//   collection: 'sessions',   // 数据库集合
-//   connection: mongoose,     // 数据库链接实例
-//   // expires: 86400,           // 默认时间为1天
-// })
+mongoose.connect('mongodb://localhost:27017/user', {'useNewUrlParser': true, 'useCreateIndex':true})
+let store =  new sessionStore({
+  collection: 'sessions',   // 数据库集合
+  connection: mongoose,     // 数据库链接实例
+  // expires: 86400,           // 默认时间为1天
+})
 
-// app.keys = ['session_key'];
+app.keys = ['session_key'];
 
-// const sessionConfig = {
-//   domain: 'localhost',  // 写cookie所在的域名
-//   path: '/',            // 写cookie所在的路径
-//   key: 'SESSION_ID',
-//   maxAge: 60000,
-//   overwrite: true,
-//   httpOnly: true,
-//   signed: true,
-//   rolling: false,
-//   store: store
-// };
+const sessionConfig = {
+  domain: 'localhost',  // 写cookie所在的域名
+  path: '/',            // 写cookie所在的路径
+  key: 'SESSION_ID',
+  maxAge: 60000,
+  overwrite: true,
+  httpOnly: true,
+  signed: true,
+  rolling: false,
+  store: store
+};
 
 // 开启cookie-session
-// app.use(session(sessionConfig,app));
+app.use(session(sessionConfig,app));
 
 // 配置控制台日志中间件
 app.use(convert(koaLogger()))

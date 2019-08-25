@@ -4,7 +4,7 @@
 
 const validator = require('validator')
 const userModel = require('./../models/user')
-const userCode = require('./../messages/user')
+const userMessage = require('./../messages/user')
 
 class user {
 
@@ -74,19 +74,19 @@ class user {
     }
 
     if ( /[a-z0-9\_\-]{6,16}/.test(userInfo.userName) === false ) {
-      result.message = userCode.ERROR_USER_NAME
+      result.message = userMessage.ERROR_USER_NAME
       return result
     }
     if ( !validator.isEmail( userInfo.email ) ) {
-      result.message = userCode.ERROR_EMAIL
+      result.message = userMessage.ERROR_EMAIL
       return result
     }
     if ( !/[\w+]{6,16}/.test( userInfo.password )  ) {
-      result.message = userCode.ERROR_PASSWORD
+      result.message = userMessage.ERROR_PASSWORD
       return result
     }
     if ( userInfo.password !== userInfo.confirmPassword ) {
-      result.message = userCode.ERROR_PASSWORD_CONFORM
+      result.message = userMessage.ERROR_PASSWORD_CONFORM
       return result
     }
 
