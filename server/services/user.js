@@ -13,7 +13,7 @@ class user {
    * @param  {object} user 用户信息
    * @return {object}      创建结果
    */
-  async create( user ) {
+  static async create( user ) {
     let result = await userModel.create(user)
     return result
   }
@@ -23,7 +23,7 @@ class user {
    * @param  {object} formData 查找的表单数据
    * @return {object|null}      查找结果
    */
-  async getExistOne( formData ) {
+  static async getExistOne( formData ) {
     let resultData = await userModel.getExistOne({
       'email': formData.email,
       'name': formData.userName
@@ -48,7 +48,7 @@ class user {
    * @param  {string} userName 用户名
    * @return {object|null}     查找结果
    */
-  async getUserInfoByUserName( userName ) {
+  static async getUserInfoByUserName( userName ) {
     
     let resultData = await userModel.getUserInfoByUserName( userName ) || {}
     let userInfo = {
@@ -67,7 +67,7 @@ class user {
    * @param  {object} userInfo 用户注册数据
    * @return {object}          校验结果
    */
-  validatorSignUp( userInfo ) {
+  static validatorSignUp( userInfo ) {
     let result = {
       success: false,
       message: '',

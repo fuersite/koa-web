@@ -1,157 +1,89 @@
-const userService = require('./../services/user')
-const userMessage = require('./../messages/user')
-
+const dbUtils = require('./../utils/dbUtil')
+const mongodbConnection = dbUtils.getMongodbConnection()
+// 表名
+const collectionName = 'user_info'
+// 对象属性名
+const properties = ['id', 'userName', 'password', 'createTime']
+// 表字段名
+const schemaData = {
+  user_name: String,
+  password: String,
+  create_time:  {
+    default: new Date(),
+    type: Date
+},
+};
 class UserModel {
-    // 表名
-    collectionName = 'user'
-    // 对象属性名
-    fileds = ['_id', 'userName', 'password', 'email', 'nick', 'createdAt', 'modifiedAt', 'level']
-    // 表字段名
-    schemas = ['_id', 'user_name', 'real_name', 'password', 'email', 'nick', 'created_at', 'modified_at', 'level']
-    
+  constructor () {
+    const { Schema } = mongodbConnection;
+    this.connection = mongodbConnection.model(collectionName, new Schema(schemaData), collectionName);
+  }
   /**
-   * 登录操作
-   * @param  {obejct} ctx 上下文对象
+   * 数据库创建用户
+   * @param  {object} model 用户数据模型
+   * @return {object}       mysql执行结果
    */
-  async signIn( ctx ) {
-    let formData = ctx.request.body
-    let result = {
-      success: false,
-      message: '',
-      data: null,
-      code: ''
-    }
-
-    let userResult = await userService.signIn( formData )
-
-    if ( userResult ) {
-      if ( formData.userName === userResult.name ) {
-        result.success = true
-      } else {
-        result.message = userMessage.FAIL_USER_NAME_OR_PASSWORD_ERROR
-        result.code = 'FAIL_USER_NAME_OR_PASSWORD_ERROR'
-      }
-    } else {
-      result.code = 'FAIL_USER_NO_EXIST',
-      result.message = userMessage.FAIL_USER_NO_EXIST
-    }
-
-    if ( formData.source === 'form' && result.success === true ) {
-      let session = ctx.session
-      session.isLogin = true
-      session.userName = userResult.name
-      session.userId = userResult.id
-
-      ctx.redirect('/work')
-    } else {
-      ctx.body = result
-    }
+  static async create ( model ) {
+    let modelDB =  this.connection(model)
+    const result = await modelDB.save()
+    return result
   }
 
   /**
-   * 注册操作
-   * @param   {obejct} ctx 上下文对象
+   * 查找一个存在用户的数据
+   * @param  {obejct} options 查找条件参数
+   * @return {object|null}        查找结果
    */
-  async signUp( ctx ) {
-    let formData = ctx.request.body
-    let result = {
-      success: false,
-      message: '',
-      data: null
-    }
-
-    let validateResult = userService.validatorSignUp( formData )
-
-    if ( validateResult.success === false ) {
-      result = validateResult
-      ctx.body = result
-      return
-    }
-
-    let existOne  = await userService.getExistOne(formData)
-    console.log( existOne )
-
-    if ( existOne  ) {
-      if ( existOne .name === formData.userName ) {
-        result.message = userMessage.FAIL_USER_NAME_IS_EXIST
-        ctx.body = result
-        return
-      }
-      if ( existOne .email === formData.email ) {
-        result.message = userMessage.FAIL_EMAIL_IS_EXIST
-        ctx.body = result
-        return
-      }
-    }
-
-
-    let userResult = await userService.create({
-      email: formData.email,
-      password: formData.password,
-      name: formData.userName,
-      create_time: new Date().getTime(),
-      level: 1,
-    })
-
-    console.log( userResult )
-
-    if ( userResult && userResult.insertId * 1 > 0) {
-      result.success = true
+  async getExistOne(options ) {
+    let _sql = `
+    SELECT * from user_info
+      where email="${options.email}" or name="${options.name}"
+      limit 1`
+    let result = await dbUtils.query( _sql )
+    if ( Array.isArray(result) && result.length > 0 ) {
+      result = result[0]
     } else {
-      result.message = userMessage.ERROR_SYS
+      result = null
     }
-
-    ctx.body = result
+    return result
   }
 
   /**
-   * 获取用户信息
-   * @param    {obejct} ctx 上下文对象
+   * 根据用户名和密码查找用户
+   * @param  {object} options 用户名密码对象
+   * @return {object|null}         查找结果
    */
-  async getLoginUserInfo( ctx ) {
-    let session = ctx.session
-    let isLogin = session.isLogin
-    let userName = session.userName
-
-    console.log( 'session=', session )
-
-    let result = {
-      success: false,
-      message: '',
-      data: null,
-    }
-    if ( isLogin === true && userName ) {
-      let userInfo = await userService.getUserInfoByUserName( userName )
-      if ( userInfo ) {
-        result.data = userInfo
-        result.success = true
-      } else {
-        result.message = userMessage.FAIL_USER_NO_LOGIN
-      }
+  static async getOneByUserNameAndPassword( options ) {
+    let _sql = `
+    SELECT * from user_info
+      where password="${options.password}" and name="${options.name}"
+      limit 1`
+    let result = await dbUtils.query( _sql )
+    if ( Array.isArray(result) && result.length > 0 ) {
+      result = result[0]
     } else {
-      // TODO
+      result = null
     }
-
-    ctx.body = result
+    return result
   }
 
   /**
-   * 校验用户是否登录
-   * @param  {obejct} ctx 上下文对象
+   * 根据用户名查找用户信息
+   * @param  {string} userName 用户账号名称
+   * @return {object|null}     查找结果
    */
-  validateLogin( ctx ) {
-    let result = {
-      success: false,
-      message: userMessage.FAIL_USER_NO_LOGIN,
-      data: null,
-      code: 'FAIL_USER_NO_LOGIN',
-    } 
-    let session = ctx.session
-    if( session && session.isLogin === true  ) {
-      result.success = true
-      result.message = ''
-      result.code = ''
+  static async getUserInfoByUserName( userName ) {
+
+    let result = await dbUtils.select(
+      'user_info',
+      ['id', 'email', 'name', 'detail_info', 'create_time', 'modified_time', 'modified_time' ])
+    if ( Array.isArray(result) && result.length > 0 ) {
+      result = result[0]
+    } else {
+      result = null
     }
     return result
   }
 }
+
+module.exports = UserModel

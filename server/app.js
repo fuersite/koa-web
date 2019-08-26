@@ -8,15 +8,12 @@ const kaoStatic = require('koa-static') // 静态文件访问
 const session = require('koa-session') // session
 const views = require('koa-views') // 视图操作
 const sessionStore = require('./utils/sessionStore') // 视图操作
-const mongoose = require('mongoose')
+const dbUtil = require('./utils/dbUtil') // 视图操作
 const app = new Koa()
 
-// 使用session存mongondb
-mongoose.connect('mongodb://localhost:27017/user', {'useNewUrlParser': true, 'useCreateIndex':true})
 let store =  new sessionStore({
   collection: 'sessions',   // 数据库集合
-  connection: mongoose,     // 数据库链接实例
-  // expires: 86400,           // 默认时间为1天
+  connection: dbUtil.getMongodbConnection(),     // 数据库链接实例
 })
 
 app.keys = ['session_key'];
@@ -43,7 +40,7 @@ app.use(convert(koaLogger()))
 app.use(bodyParser());
 
 // 静态文件处理
-app.use(kaoStatic(path.join( __dirname,  './static/')))
+app.use(kaoStatic(path.join( __dirname,  './../static/')))
 
 // 加载模板引擎
 app.use(views(path.join(__dirname, './views/'), {extension: 'ejs'}))

@@ -1,6 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+var APP_DIR = path.resolve(__dirname, '../src');
 const srcResolve = function (file) {
   return path.join(__dirname, '..', 'src', file);
 };
@@ -11,10 +11,9 @@ const distResolve = function (file) {
 
 module.exports = {
   entry: {
-    'index': srcResolve('js/index'),
+    'index': srcResolve('pages/index'),
     'admin' : srcResolve('pages/admin.js'),
     'work' : srcResolve('pages/work.js'),
-    'index' : srcResolve('pages/index.js'),
     'error' : srcResolve('pages/error.js'),
   },
   output: {
@@ -27,7 +26,6 @@ module.exports = {
         test: /\.(js|jsx)$/,
         use: {
           loader: 'babel-loader',
-          options: { presets: ["react","es2015"] }
         }
       },
       {

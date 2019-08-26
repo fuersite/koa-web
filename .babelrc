@@ -1,12 +1,42 @@
 {
-  "presets": [
-    ["env", {
-      "targets": {
-        "node": true
+    "presets": [
+      "es2015",
+      "stage-0",
+      "react",
+      ["env", {
+        "modules": false,
+        "targets": {
+          "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
+        }
+      }],
+      "stage-2"
+    ],
+    "plugins": [
+      [
+        "transform-runtime",
+        {
+          "helpers": false,
+          "polyfill": false,
+          "regenerator": true,
+          "moduleName": "babel-runtime"
+        }
+      ],
+      [
+          "import",
+          { "libraryName": "antd", "libraryDirectory": "lib" },
+          "ant"
+      ],
+      [
+          "import",
+          { "libraryName": "antd-mobile", "libraryDirectory": "lib" },
+          "antd-mobile"
+      ],
+      "babel-plugin-transform-class-properties"
+    ],
+      "env": {
+      "test": {
+        "presets": [["env"], "react", "stage-0"],
+        "plugins": ["transform-runtime", "transform-decorators-legacy", "babel-plugin-transform-class-properties"]      
       }
-    }],
-    ["es2015"],
-    ["react"]
-  ],
-  "plugins": ["transform-runtime"]
-}
+    }
+  }

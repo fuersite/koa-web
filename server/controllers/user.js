@@ -1,4 +1,4 @@
-const userService = require('./../services/user-info')
+const userService = require('./../services/user')
 const userMessage = require('./../messages/user')
 
 class UserController {
@@ -6,7 +6,7 @@ class UserController {
    * 登录操作
    * @param  {obejct} ctx 上下文对象
    */
-  async signIn( ctx ) {
+  static async signIn( ctx ) {
     let formData = ctx.request.body
     let result = {
       success: false,
@@ -45,63 +45,22 @@ class UserController {
    * 注册操作
    * @param   {obejct} ctx 上下文对象
    */
-  async signUp( ctx ) {
+  static async signUp( ctx ) {
     let formData = ctx.request.body
-    let result = {
-      success: false,
-      message: '',
-      data: null
-    }
-
-    let validateResult = userService.validatorSignUp( formData )
-
-    if ( validateResult.success === false ) {
-      result = validateResult
-      ctx.body = result
-      return
-    }
-
-    let existOne  = await userService.getExistOne(formData)
-    console.log( existOne )
-
-    if ( existOne  ) {
-      if ( existOne .name === formData.userName ) {
-        result.message = userMessage.FAIL_USER_NAME_IS_EXIST
-        ctx.body = result
-        return
-      }
-      if ( existOne .email === formData.email ) {
-        result.message = userMessage.FAIL_EMAIL_IS_EXIST
-        ctx.body = result
-        return
-      }
-    }
-
-
     let userResult = await userService.create({
-      email: formData.email,
       password: formData.password,
-      name: formData.userName,
+      user_name: formData.userName,
       create_time: new Date().getTime(),
-      level: 1,
     })
 
-    console.log( userResult )
-
-    if ( userResult && userResult.insertId * 1 > 0) {
-      result.success = true
-    } else {
-      result.message = userMessage.ERROR_SYS
-    }
-
-    ctx.body = result
+    ctx.body = userResult
   }
 
   /**
    * 获取用户信息
    * @param    {obejct} ctx 上下文对象
    */
-  async getLoginUserInfo( ctx ) {
+  static async getLoginUserInfo( ctx ) {
     let session = ctx.session
     let isLogin = session.isLogin
     let userName = session.userName
@@ -132,7 +91,7 @@ class UserController {
    * 校验用户是否登录
    * @param  {obejct} ctx 上下文对象
    */
-  validateLogin( ctx ) {
+  static validateLogin( ctx ) {
     let result = {
       success: false,
       message: userMessage.FAIL_USER_NO_LOGIN,
