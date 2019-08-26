@@ -18,28 +18,14 @@ class user {
     return result
   }
 
-  /**
-   * 查找存在用户信息
-   * @param  {object} formData 查找的表单数据
-   * @return {object|null}      查找结果
-   */
-  static async getExistOne( formData ) {
-    let resultData = await userModel.getExistOne({
-      'email': formData.email,
-      'name': formData.userName
-    })
-    return resultData
-  }
 
   /**
    * 登录业务操作
    * @param  {object} formData 登录表单信息
    * @return {object}          登录业务操作结果
    */
-  async signIn( formData ) {
-    let resultData = await userModel.getOneByUserNameAndPassword({
-      'password': formData.password,
-      'name': formData.userName})
+  static async signIn( formData ) {
+    let resultData = await userModel.getOneByUserNameAndPassword(formData.userName, formData.password)
     return resultData
   }
 
@@ -52,10 +38,7 @@ class user {
     
     let resultData = await userModel.getUserInfoByUserName( userName ) || {}
     let userInfo = {
-      // id: resultData.id,
-      email: resultData.email,
-      userName: resultData.name,
-      detailInfo: resultData.detail_info,
+      userName: resultData.user_name,
       createTime: resultData.create_time
     }
     return userInfo

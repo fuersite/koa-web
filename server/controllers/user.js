@@ -17,13 +17,8 @@ class UserController {
 
     let userResult = await userService.signIn( formData )
 
-    if ( userResult ) {
-      if ( formData.userName === userResult.name ) {
-        result.success = true
-      } else {
-        result.message = userMessage.FAIL_USER_NAME_OR_PASSWORD_ERROR
-        result.code = 'FAIL_USER_NAME_OR_PASSWORD_ERROR'
-      }
+    if (userResult && userResult.user_name ) {
+      result.success = true
     } else {
       result.code = 'FAIL_USER_NO_EXIST',
       result.message = userMessage.FAIL_USER_NO_EXIST
@@ -33,8 +28,7 @@ class UserController {
       let session = ctx.session
       session.isLogin = true
       session.userName = userResult.name
-      session.userId = userResult.id
-
+      session.userId = userResult._id
       ctx.redirect('/work')
     } else {
       ctx.body = result

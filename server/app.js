@@ -13,7 +13,7 @@ const app = new Koa()
 
 let store =  new sessionStore({
   collection: 'sessions',   // 数据库集合
-  connection: dbUtil.getMongodbConnection(),     // 数据库链接实例
+  connection: dbUtil.connection(),     // 数据库链接实例
 })
 
 app.keys = ['session_key'];
