@@ -27,8 +27,9 @@ class UserController {
     if ( formData.source === 'form' && result.success === true ) {
       let session = ctx.session
       session.isLogin = true
-      session.userName = userResult.name
+      session.userName = userResult.user_name
       session.userId = userResult._id
+      console.log('set session =================', session)
       ctx.redirect('/work')
     } else {
       ctx.body = result

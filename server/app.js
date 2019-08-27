@@ -22,7 +22,7 @@ const sessionConfig = {
   domain: 'localhost',  // 写cookie所在的域名
   path: '/',            // 写cookie所在的路径
   key: 'SESSION_ID',
-  maxAge: 60000,
+  maxAge: 6000000,
   overwrite: true,
   httpOnly: true,
   signed: true,

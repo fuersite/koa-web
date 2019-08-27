@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "npm run dev:server && npm run dev:static",
     "dev:server": "nodemon ./server/app.js",
-    "dev:static": "webpack --watch --config ./static/build/webpack.dev.config.js",
+    "dev:static": "webpack-dev-server --watch --config ./static/build/webpack.dev.config.js",
     "build:static": "webpack --config ./static/build/webpack.prod.config.js",
     "build:server": "node ./server/app.js"
   },
@@ -59,6 +59,7 @@
     "cross-env": "^5.2.0",
     "css-loader": "^3.2.0",
     "externals-dependencies": "^1.0.4",
+    "html-webpack-plugin": "^3.2.0",
     "koa-webpack": "^5.2.4",
     "koa-webpack-hot-middleware": "^1.0.3",
     "less": "^3.10.3",

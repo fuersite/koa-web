@@ -13,7 +13,9 @@ module.exports = merge(config, {
         cache: true,
         parallel: true
       }),
-      new OptimizeCSSAssetsPlugin({})
+      new OptimizeCSSAssetsPlugin({
+        assetNameRegExp: /\.vendor\.css$/g,
+      })
     ]
   }
 });
