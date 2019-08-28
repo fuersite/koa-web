@@ -36,7 +36,7 @@
 
 - dev启动
 
-```
+```bash
 // 前端启动并不生成dist文件
 $ npm run dev:static
 
@@ -46,7 +46,7 @@ $ npm run dev:server
 
 - prod启动
 
-```
+```bash
 // 前端编译生成dist文件
 $ npm run build:static
 
